@@ -7,4 +7,11 @@ test.describe('Landing page', () => {
     await expect(cta).toBeVisible();
     await expect(cta).toHaveAttribute('href', 'https://app.sostalog.com');
   });
+
+  test('header renders wordmark and GitHub link', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.getByRole('banner').getByText('sostalog')).toBeVisible();
+    const gh = page.getByRole('banner').getByRole('link', { name: /github/i });
+    await expect(gh).toHaveAttribute('href', 'https://github.com/dalbrecht/sosta');
+  });
 });
