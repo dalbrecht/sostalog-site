@@ -16,6 +16,8 @@
     "@astrojs/check": "0.9.4",
     "@fontsource/crimson-pro": "5",
     "@fontsource/geist-sans": "5",
+    "@sagegrouse/astro": "^0.1.0",
+    "@sagegrouse/core": "^0.1.0",
     "@tailwindcss/vite": "^4.3.0",
     "astro": "6.0.0",
     "tailwindcss": "^4.3.0",
@@ -23,6 +25,7 @@
   },
   "devDependencies": {
     "@playwright/test": "1.48.0",
+    "@sagegrouse/cli": "^0.1.0",
     "vitest": "2.1.2",
     "wrangler": "4"
   }
