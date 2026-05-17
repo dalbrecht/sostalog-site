@@ -32,4 +32,10 @@ test.describe('Landing page', () => {
     await expect(img).toHaveAttribute('width');
     await expect(img).toHaveAttribute('height');
   });
+
+  test('three beats render: Capture, Tag, Freeze', async ({ page }) => {
+    await page.goto('/');
+    const beats = page.locator('section[aria-label="How sosta works"] h3');
+    await expect(beats).toHaveText(['Capture.', 'Tag.', 'Freeze.']);
+  });
 });

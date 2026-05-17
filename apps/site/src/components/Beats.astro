@@ -1,0 +1,65 @@
+---
+---
+
+<section class="beats" aria-label="How sosta works">
+  <div class="beat">
+    <h3>Capture.</h3>
+    <p>A composer at the top of every page. <kbd>⌘↵</kbd> commits.</p>
+  </div>
+  <div class="beat">
+    <h3>Tag.</h3>
+    <p>Inline <code>#hashtags</code> group entries by theme. No folders to manage.</p>
+  </div>
+  <div class="beat">
+    <h3>Freeze.</h3>
+    <p>After 24 hours, entries lock. Your record stops moving.</p>
+  </div>
+</section>
+
+<style>
+  .beats {
+    max-width: 56rem;
+    margin: 0 auto;
+    padding: 6rem 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem;
+  }
+
+  .beat h3 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 0.75rem;
+    color: var(--fg);
+  }
+
+  .beat p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--fg-muted);
+    margin: 0;
+  }
+
+  kbd {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.125rem 0.375rem;
+  }
+
+  code {
+    font-family: var(--font-sans);
+    color: var(--accent);
+  }
+
+  @media (max-width: 640px) {
+    .beats {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+      padding: 3rem 1.5rem;
+    }
+  }
+</style>
