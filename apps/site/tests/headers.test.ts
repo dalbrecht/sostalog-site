@@ -3,7 +3,6 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 const HEADERS_PATH = fileURLToPath(new URL('../public/_headers', import.meta.url));
-const REDIRECTS_PATH = fileURLToPath(new URL('../public/_redirects', import.meta.url));
 
 describe('_headers', () => {
   const text = readFileSync(HEADERS_PATH, 'utf-8');
@@ -42,10 +41,7 @@ describe('_headers', () => {
   });
 });
 
-describe('_redirects', () => {
-  const text = readFileSync(REDIRECTS_PATH, 'utf-8');
-
-  it('redirects www to apex with 301', () => {
-    expect(text).toMatch(/https:\/\/www\.sostalog\.com\/\*\s+https:\/\/sostalog\.com\/:splat\s+301/);
-  });
-});
+// www → apex redirect is configured as a Cloudflare zone-level Redirect Rule
+// (not via _redirects), because Workers static-assets _redirects rejects
+// absolute URLs and therefore cannot host-redirect. See
+// docs/runbooks/cloudflare-setup.md § 2a.
