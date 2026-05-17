@@ -1,10 +1,18 @@
-import { defineConfig } from '@sagegrouse/core';
+import { defineConfig, z } from '@sagegrouse/core';
 
-// Intentionally empty: the marketing site has no staged content yet.
-// Adding a blog or changelog is a future spec — see
-// docs/superpowers/specs/2026-05-16-sosta-marketing-site-design.md § 10.
 export default defineConfig({
   contentRoot: 'src/content',
-  contentTypes: {},
+  contentTypes: {
+    changelog: {
+      schema: z.object({
+        title: z.string(),
+        date: z.date(),
+        version: z.string().optional(),
+        summary: z.string(),
+      }),
+      stages: [],
+      location: 'src/content/changelog',
+    },
+  },
   adapters: [],
 });
