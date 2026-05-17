@@ -1,5 +1,9 @@
 @import 'tailwindcss';
 @import './tokens.css';
+@import '@fontsource/crimson-pro/400.css';
+@import '@fontsource/crimson-pro/600.css';
+@import '@fontsource/geist-sans/400.css';
+@import '@fontsource/geist-sans/500.css';
 
 @theme {
   --color-bg: var(--bg);
@@ -30,11 +34,18 @@
   --spacing-5: var(--space-5);
   --spacing-6: var(--space-6);
   --spacing-7: var(--space-7);
+
+  --font-serif: 'Crimson Pro', 'Source Serif 4', Georgia, serif;
+  --font-sans: 'Geist', 'Manrope', system-ui, -apple-system, sans-serif;
 }
 
 html {
   background: var(--bg);
   color: var(--fg);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 body {
