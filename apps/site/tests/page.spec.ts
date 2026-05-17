@@ -14,4 +14,12 @@ test.describe('Landing page', () => {
     const gh = page.getByRole('banner').getByRole('link', { name: /github/i });
     await expect(gh).toHaveAttribute('href', 'https://github.com/dalbrecht/sosta');
   });
+
+  test('hero renders headline and sub-copy', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+      'Capture the day in the spaces between.',
+    );
+    await expect(page.getByText(/A timestamped note here\./)).toBeVisible();
+  });
 });

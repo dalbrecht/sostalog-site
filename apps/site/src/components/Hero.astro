@@ -1,0 +1,58 @@
+---
+import Cta from './Cta.astro';
+---
+
+<section class="hero">
+  <h1>Capture the day in the spaces between.</h1>
+  <p class="hero-sub">
+    A timestamped note here. A hashtag there. A week of small entries that
+    turns into a record.
+  </p>
+  <div class="hero-cta">
+    <Cta href="https://app.sostalog.com" label="Open sosta" />
+  </div>
+</section>
+
+<style>
+  .hero {
+    max-width: 42rem;
+    margin: 0 auto;
+    padding: 12rem 1.5rem 6rem;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: 3.5rem;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin: 0 0 1.5rem;
+    color: var(--fg);
+  }
+
+  .hero-sub {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: var(--fg-muted);
+    margin: 0 auto 2.5rem;
+    max-width: 32rem;
+  }
+
+  .hero-cta {
+    display: flex;
+    justify-content: center;
+  }
+
+  @media (max-width: 640px) {
+    .hero {
+      padding: 5rem 1.5rem 3rem;
+    }
+    .hero h1 {
+      font-size: 2.25rem;
+    }
+    .hero-sub {
+      font-size: 1rem;
+    }
+  }
+</style>
