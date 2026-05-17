@@ -38,4 +38,11 @@ test.describe('Landing page', () => {
     const beats = page.locator('section[aria-label="How sosta works"] h3');
     await expect(beats).toHaveText(['Capture.', 'Tag.', 'Freeze.']);
   });
+
+  test('pillars section renders heading and four bullets', async ({ page }) => {
+    await page.goto('/');
+    const pillars = page.locator('section[aria-label="Why sosta"]');
+    await expect(pillars.getByRole('heading', { level: 2 })).toHaveText('Yours. Quiet. Free.');
+    await expect(pillars.locator('li')).toHaveCount(4);
+  });
 });

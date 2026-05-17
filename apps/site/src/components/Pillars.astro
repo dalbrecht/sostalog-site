@@ -1,0 +1,53 @@
+---
+---
+
+<section class="pillars" aria-label="Why sosta">
+  <h2>Yours. Quiet. Free.</h2>
+  <ul>
+    <li>Your journal is a file on your computer.</li>
+    <li>Works offline. No account, ever.</li>
+    <li>No streaks, no badges, no notifications.</li>
+    <li>Open source. MIT-licensed.</li>
+  </ul>
+</section>
+
+<style>
+  .pillars {
+    max-width: 42rem;
+    margin: 0 auto;
+    padding: 4rem 1.5rem;
+  }
+
+  .pillars h2 {
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--fg);
+    margin: 0 0 1.5rem;
+  }
+
+  .pillars ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.875rem;
+  }
+
+  .pillars li {
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: var(--fg-muted);
+    position: relative;
+    padding-left: 1.25rem;
+  }
+
+  .pillars li::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+</style>
