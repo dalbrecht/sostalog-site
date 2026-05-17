@@ -60,4 +60,14 @@ test.describe('Production smoke tests', () => {
     await page.goto(PROD_URL, { waitUntil: 'networkidle' });
     expect(unexpectedScripts).toEqual([]);
   });
+
+  test('/changelog returns 200 with required security headers', async ({ request }) => {
+    const res = await request.get(`${PROD_URL}/changelog`);
+    expect(res.status()).toBe(200);
+    const headers = res.headers();
+    expect(headers['strict-transport-security']).toMatch(/max-age=31536000/);
+    expect(headers['content-security-policy']).toMatch(/default-src 'self'/);
+    expect(headers['x-content-type-options']).toBe('nosniff');
+    expect(headers['x-frame-options']).toBe('DENY');
+  });
 });

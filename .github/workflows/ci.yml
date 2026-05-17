@@ -74,18 +74,40 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm run build
-      - name: Verify page weight under 100 KB (HTML + critical CSS)
+      - name: Verify page weight under 100 KB per page (HTML + CSS actually linked)
         run: |
-          html_size=$(stat -c%s apps/site/dist/index.html)
-          css_size=$(du -cb apps/site/dist/_astro/*.css 2>/dev/null | tail -1 | cut -f1 || echo 0)
-          total=$((html_size + css_size))
-          echo "index.html: ${html_size} bytes"
-          echo "css total:  ${css_size} bytes"
-          echo "combined:   ${total} bytes"
-          if [ "$total" -gt 102400 ]; then
-            echo "FAIL: HTML+CSS exceeds 100 KB"
-            exit 1
-          fi
+          # Charge each page only for the CSS files it actually <link>s.
+          # Summing every dist/_astro/*.css and applying it to every page
+          # overcharges as soon as Astro emits per-route CSS chunks.
+          fail=0
+          while IFS= read -r html; do
+            html_size=$(stat -c%s "$html")
+            css_total=0
+            # Pull href values from <link ...>; keep .css ones; resolve to
+            # absolute paths inside dist/ and sum their sizes. Astro emits
+            # /_astro/*.css with leading slash; we strip the slash to anchor
+            # the path under apps/site/dist.
+            while IFS= read -r href; do
+              [ -z "$href" ] && continue
+              case "$href" in *.css*) ;; *) continue ;; esac
+              # Drop any query string and the leading slash if present.
+              path="${href%\?*}"
+              path="${path#/}"
+              full="apps/site/dist/${path}"
+              if [ -f "$full" ]; then
+                size=$(stat -c%s "$full")
+                css_total=$((css_total + size))
+              fi
+            done < <(grep -oE 'href="[^"]+\.css[^"]*"' "$html" | sed -E 's/^href="//; s/"$//')
+            total=$((html_size + css_total))
+            rel=${html#apps/site/dist/}
+            echo "$rel: ${html_size}B HTML + ${css_total}B CSS = ${total}B"
+            if [ "$total" -gt 102400 ]; then
+              echo "FAIL: $rel exceeds 100 KB"
+              fail=1
+            fi
+          done < <(find apps/site/dist -name '*.html')
+          exit $fail
       - name: Verify zero runtime JS shipped
         run: |
           if ls apps/site/dist/_astro/*.js >/dev/null 2>&1; then

@@ -56,4 +56,49 @@ test.describe('Landing page', () => {
     await expect(footer).toContainText('MIT');
     await expect(footer).toContainText('2026');
   });
+
+  test('header nav contains a Changelog link', async ({ page }) => {
+    await page.goto('/');
+    const nav = page.getByRole('navigation', { name: 'Main' });
+    const link = nav.getByRole('link', { name: 'Changelog' });
+    await expect(link).toBeVisible();
+    await expect(link).toHaveAttribute('href', '/changelog');
+  });
+
+  test('footer sitemap row contains brand and Changelog link', async ({ page }) => {
+    await page.goto('/');
+    const sitemap = page.getByRole('navigation', { name: 'Footer' });
+    await expect(sitemap).toBeVisible();
+    await expect(sitemap.getByRole('link', { name: 'sostalog' })).toHaveAttribute('href', '/');
+    await expect(sitemap.getByRole('link', { name: 'Changelog' })).toHaveAttribute('href', '/changelog');
+  });
+});
+
+test.describe('Changelog', () => {
+  test('page renders H1 and lede', async ({ page }) => {
+    await page.goto('/changelog');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Changelog');
+    await expect(page.getByText(/Newest first/)).toBeVisible();
+  });
+
+  test('renders at least one entry with title, date, summary', async ({ page }) => {
+    await page.goto('/changelog');
+    const articles = page.locator('main article');
+    await expect(articles.first()).toBeVisible();
+    await expect(articles.first().locator('h2')).toBeVisible();
+    await expect(articles.first().locator('time')).toBeVisible();
+    await expect(articles.first().locator('.summary')).toBeVisible();
+  });
+
+  test('header Changelog link has aria-current="page" on /changelog', async ({ page }) => {
+    await page.goto('/changelog');
+    const link = page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Changelog' });
+    await expect(link).toHaveAttribute('aria-current', 'page');
+  });
+
+  test('seed entry has stable anchor at #initial-public-launch', async ({ page }) => {
+    await page.goto('/changelog#initial-public-launch');
+    const article = page.locator('article#initial-public-launch');
+    await expect(article).toBeVisible();
+  });
 });

@@ -1,0 +1,199 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+// ChangelogData mirrors the zod schema in `apps/site/sagegrouse.config.ts`.
+// Sagegrouse-astro doesn't yet bridge the zod schema's TypeScript types
+// through Astro's content collection, so we cast manually. If you add or
+// rename a field in the sagegrouse schema, update this interface in lockstep
+// and the content-schema vitest test (`tests/content-schema.test.ts`) will
+// catch shape drift at the runtime schema layer.
+interface ChangelogData {
+  title: string;
+  date: Date;
+  version?: string;
+  summary: string;
+}
+
+const rawEntries = await getCollection('changelog');
+const entries = (rawEntries as Array<(typeof rawEntries)[number] & { data: ChangelogData }>).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
+function versionSlug(version: string): string {
+  return version
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+// Detect duplicate version slugs at build time. Two entries with the same
+// version would produce duplicate id="..." attributes, breaking fragment
+// navigation and invalidating the HTML. Fail the build so the author
+// notices before deploy.
+const versionSlugCounts = new Map<string, string[]>();
+for (const entry of entries) {
+  if (!entry.data.version) continue;
+  const slug = versionSlug(entry.data.version);
+  const list = versionSlugCounts.get(slug) ?? [];
+  list.push(entry.id);
+  versionSlugCounts.set(slug, list);
+}
+const collisions = [...versionSlugCounts.entries()].filter(([, ids]) => ids.length > 1);
+if (collisions.length > 0) {
+  const detail = collisions.map(([slug, ids]) => `  ${slug}: ${ids.join(', ')}`).join('\n');
+  throw new Error(
+    `Changelog version-slug collision detected. Pick distinct version labels for these entries:\n${detail}`,
+  );
+}
+
+// Date formatting convention: render the UTC date portion of `date`.
+// All current and planned entries use a frontmatter date-only string
+// (e.g., `date: 2026-05-17`) which Astro parses as 2026-05-17T00:00:00Z;
+// the UTC-slice rendering matches the author's intent. If a future entry
+// needs a timezone-specific datetime, change this to use Intl.DateTimeFormat
+// with an explicit timezone — don't silently keep slicing the UTC ISO.
+function formatDate(d: Date): string {
+  return d.toISOString().slice(0, 10);
+}
+---
+
+<Base title="Changelog — sostalog" description="What's new in sosta. Newest first.">
+  <Header currentPath="/changelog" />
+  <main class="changelog">
+    <header class="changelog-header">
+      <h1>Changelog</h1>
+      <p class="lede">What's new in sosta. Newest first.</p>
+    </header>
+    {
+      entries.map(async (entry) => {
+        const { Content } = await render(entry);
+        const vSlug = entry.data.version ? versionSlug(entry.data.version) : undefined;
+        return (
+          <article id={entry.id}>
+            {vSlug && <span id={vSlug} class="version-anchor" aria-hidden="true" />}
+            <h2>{entry.data.title}</h2>
+            <p class="meta">
+              <time datetime={formatDate(entry.data.date)}>{formatDate(entry.data.date)}</time>
+              {entry.data.version && (
+                <>
+                  <span class="sep" aria-hidden="true">
+                    ·
+                  </span>
+                  <span class="version">{entry.data.version}</span>
+                </>
+              )}
+            </p>
+            <p class="summary">{entry.data.summary}</p>
+            <div class="body">
+              <Content />
+            </div>
+          </article>
+        );
+      })
+    }
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  .changelog {
+    max-width: 42rem;
+    margin: 0 auto;
+    padding: 6rem 1.5rem 4rem;
+  }
+
+  .changelog-header {
+    margin-bottom: var(--space-7);
+  }
+
+  .changelog-header h1 {
+    font-family: var(--font-serif);
+    font-size: 2.5rem;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.5rem;
+    color: var(--fg);
+  }
+
+  .lede {
+    margin: 0;
+    color: var(--fg-muted);
+    font-size: 1rem;
+  }
+
+  article {
+    margin-bottom: var(--space-7);
+    position: relative;
+  }
+
+  .version-anchor {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  article h2 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+    color: var(--fg);
+  }
+
+  .meta {
+    margin: 0 0 1rem;
+    color: var(--fg-faint);
+    font-size: 0.875rem;
+  }
+
+  .meta .version {
+    color: var(--accent);
+  }
+
+  .meta .sep {
+    margin: 0 0.375rem;
+    color: var(--border-strong);
+  }
+
+  .summary {
+    margin: 0 0 1rem;
+    font-size: 1.0625rem;
+    font-weight: 500;
+    color: var(--fg);
+    line-height: 1.55;
+  }
+
+  .body {
+    color: var(--fg);
+    line-height: 1.6;
+  }
+
+  .body :global(ul) {
+    padding-left: 1.25rem;
+  }
+
+  .body :global(li) {
+    margin: 0.25rem 0;
+  }
+
+  .body :global(code) {
+    font-family: var(--font-sans);
+    color: var(--accent);
+  }
+
+  @media (max-width: 640px) {
+    .changelog {
+      padding: 3rem 1.5rem;
+    }
+    .changelog-header {
+      margin-bottom: var(--space-6);
+    }
+    article {
+      margin-bottom: var(--space-6);
+    }
+  }
+</style>
