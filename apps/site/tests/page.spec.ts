@@ -22,4 +22,14 @@ test.describe('Landing page', () => {
     );
     await expect(page.getByText(/A timestamped note here\./)).toBeVisible();
   });
+
+  test('showcase image is present, lazy-loaded, and has width/height', async ({ page }) => {
+    await page.goto('/');
+    const img = page.getByRole('img', { name: /sosta timeline/i });
+    await expect(img).toBeVisible();
+    await expect(img).toHaveAttribute('loading', 'lazy');
+    await expect(img).toHaveAttribute('decoding', 'async');
+    await expect(img).toHaveAttribute('width');
+    await expect(img).toHaveAttribute('height');
+  });
 });
