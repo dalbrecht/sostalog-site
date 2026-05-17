@@ -9,6 +9,7 @@
     "preview": "astro preview",
     "test": "vitest run --passWithNoTests",
     "test:e2e": "playwright test",
+    "test:smoke": "playwright test --config=playwright.smoke.config.ts",
     "typecheck": "astro check",
     "lint": "astro check"
   },
