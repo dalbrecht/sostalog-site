@@ -62,7 +62,7 @@ test.describe('Production smoke tests', () => {
   });
 
   test('/changelog returns 200 with required security headers', async ({ request }) => {
-    const res = await request.get('https://sostalog.com/changelog');
+    const res = await request.get(`${PROD_URL}/changelog`);
     expect(res.status()).toBe(200);
     const headers = res.headers();
     expect(headers['strict-transport-security']).toMatch(/max-age=31536000/);

@@ -4,6 +4,12 @@ import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
+// ChangelogData mirrors the zod schema in `apps/site/sagegrouse.config.ts`.
+// Sagegrouse-astro doesn't yet bridge the zod schema's TypeScript types
+// through Astro's content collection, so we cast manually. If you add or
+// rename a field in the sagegrouse schema, update this interface in lockstep
+// and the content-schema vitest test (`tests/content-schema.test.ts`) will
+// catch shape drift at the runtime schema layer.
 interface ChangelogData {
   title: string;
   date: Date;
@@ -23,6 +29,32 @@ function versionSlug(version: string): string {
     .replace(/^-+|-+$/g, '');
 }
 
+// Detect duplicate version slugs at build time. Two entries with the same
+// version would produce duplicate id="..." attributes, breaking fragment
+// navigation and invalidating the HTML. Fail the build so the author
+// notices before deploy.
+const versionSlugCounts = new Map<string, string[]>();
+for (const entry of entries) {
+  if (!entry.data.version) continue;
+  const slug = versionSlug(entry.data.version);
+  const list = versionSlugCounts.get(slug) ?? [];
+  list.push(entry.id);
+  versionSlugCounts.set(slug, list);
+}
+const collisions = [...versionSlugCounts.entries()].filter(([, ids]) => ids.length > 1);
+if (collisions.length > 0) {
+  const detail = collisions.map(([slug, ids]) => `  ${slug}: ${ids.join(', ')}`).join('\n');
+  throw new Error(
+    `Changelog version-slug collision detected. Pick distinct version labels for these entries:\n${detail}`,
+  );
+}
+
+// Date formatting convention: render the UTC date portion of `date`.
+// All current and planned entries use a frontmatter date-only string
+// (e.g., `date: 2026-05-17`) which Astro parses as 2026-05-17T00:00:00Z;
+// the UTC-slice rendering matches the author's intent. If a future entry
+// needs a timezone-specific datetime, change this to use Intl.DateTimeFormat
+// with an explicit timezone — don't silently keep slicing the UTC ISO.
 function formatDate(d: Date): string {
   return d.toISOString().slice(0, 10);
 }
@@ -41,7 +73,7 @@ function formatDate(d: Date): string {
         const vSlug = entry.data.version ? versionSlug(entry.data.version) : undefined;
         return (
           <article id={entry.id}>
-            {vSlug && <a id={vSlug} class="version-anchor" aria-hidden="true" />}
+            {vSlug && <span id={vSlug} class="version-anchor" aria-hidden="true" />}
             <h2>{entry.data.title}</h2>
             <p class="meta">
               <time datetime={formatDate(entry.data.date)}>{formatDate(entry.data.date)}</time>
