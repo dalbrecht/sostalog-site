@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Sostalog-site is the marketing site for [sosta](https://app.sostalog.com), hosted at `https://sostalog.com`. A single-page Astro 6 + Tailwind 4 site, statically generated, zero runtime JavaScript, deployed to Cloudflare Workers.
+Sostalog-site is the marketing site for [sosta](https://app.sostalog.com), hosted at `https://sostalog.com`. A single-page Astro 6 + Tailwind 4 site, statically generated, zero application JavaScript, deployed to Cloudflare Workers.
 
 The Daylight visual language is mirrored from the sosta app — see `docs/adr/0001-mirror-daylight-tokens.md`.
 
@@ -47,7 +47,7 @@ The implementation plan lives in the sosta repo: `docs/superpowers/plans/2026-05
 
 ## Invariants
 
-- The page ships zero runtime JavaScript. CI guards this.
+- The build ships zero application JavaScript (no `*.js` in `dist/`, no `<script>` in pages). CI guards this. Cloudflare may inject the Web Analytics beacon at the edge — that's accepted and called out in the smoke test.
 - Total HTML + CSS weight is under 100 KB. CI guards this.
 - The CTA links to `https://app.sostalog.com` — cross-origin to keep the two hosts cleanly separable.
 - `www.sostalog.com` 301-redirects to the apex. The apex is canonical.

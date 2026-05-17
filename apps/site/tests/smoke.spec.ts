@@ -40,12 +40,24 @@ test.describe('Production smoke tests', () => {
     expect(res.status()).toBe(200);
   });
 
-  test('page ships zero runtime JS', async ({ page }) => {
-    const jsRequests: string[] = [];
+  test('page ships no application JS', async ({ page }) => {
+    // Our build emits zero JS (CI guards this against dist/), but Cloudflare
+    // auto-injects the Web Analytics beacon at the edge for sites with
+    // analytics enabled. The beacon is ~1KB, async, cookie-free, and out of
+    // our build's hands — allow it but fail on any other script.
+    //
+    // Match the full URL prefix (not just hostname) so a different script
+    // served from the same host would still fail. The beacon URL looks like
+    // https://static.cloudflareinsights.com/beacon.min.js/<hash>.
+    const ALLOWED_SCRIPT_URL_PREFIX = 'https://static.cloudflareinsights.com/beacon.min.js/';
+    const unexpectedScripts: string[] = [];
     page.on('request', (req) => {
-      if (req.resourceType() === 'script') jsRequests.push(req.url());
+      if (req.resourceType() !== 'script') return;
+      if (!req.url().startsWith(ALLOWED_SCRIPT_URL_PREFIX)) {
+        unexpectedScripts.push(req.url());
+      }
     });
     await page.goto(PROD_URL, { waitUntil: 'networkidle' });
-    expect(jsRequests).toEqual([]);
+    expect(unexpectedScripts).toEqual([]);
   });
 });
