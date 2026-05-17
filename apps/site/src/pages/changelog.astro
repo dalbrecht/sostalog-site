@@ -47,7 +47,9 @@ function formatDate(d: Date): string {
               <time datetime={formatDate(entry.data.date)}>{formatDate(entry.data.date)}</time>
               {entry.data.version && (
                 <>
-                  <span class="sep" aria-hidden="true">·</span>
+                  <span class="sep" aria-hidden="true">
+                    ·
+                  </span>
                   <span class="version">{entry.data.version}</span>
                 </>
               )}

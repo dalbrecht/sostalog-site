@@ -20,7 +20,11 @@ const isCurrent = (href: string) => currentPath === href || currentPath === `${h
     {
       navLinks.map((link, i) => (
         <>
-          {i > 0 && <span class="sep" aria-hidden="true">·</span>}
+          {i > 0 && (
+            <span class="sep" aria-hidden="true">
+              ·
+            </span>
+          )}
           <a
             href={link.href}
             class={isCurrent(link.href) ? 'is-current' : undefined}
@@ -32,12 +36,7 @@ const isCurrent = (href: string) => currentPath === href || currentPath === `${h
       ))
     }
   </nav>
-  <a
-    class="github-link"
-    href="https://github.com/dalbrecht/sosta"
-    rel="noopener"
-    aria-label="View sosta on GitHub"
-  >
+  <a class="github-link" href="https://github.com/dalbrecht/sosta" rel="noopener" aria-label="View sosta on GitHub">
     GitHub <span aria-hidden="true">↗</span>
   </a>
 </header>

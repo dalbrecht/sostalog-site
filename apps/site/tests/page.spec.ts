@@ -70,10 +70,7 @@ test.describe('Landing page', () => {
     const sitemap = page.getByRole('navigation', { name: 'Footer' });
     await expect(sitemap).toBeVisible();
     await expect(sitemap.getByRole('link', { name: 'sostalog' })).toHaveAttribute('href', '/');
-    await expect(sitemap.getByRole('link', { name: 'Changelog' })).toHaveAttribute(
-      'href',
-      '/changelog',
-    );
+    await expect(sitemap.getByRole('link', { name: 'Changelog' })).toHaveAttribute('href', '/changelog');
   });
 });
 
@@ -95,9 +92,7 @@ test.describe('Changelog', () => {
 
   test('header Changelog link has aria-current="page" on /changelog', async ({ page }) => {
     await page.goto('/changelog');
-    const link = page
-      .getByRole('navigation', { name: 'Main' })
-      .getByRole('link', { name: 'Changelog' });
+    const link = page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Changelog' });
     await expect(link).toHaveAttribute('aria-current', 'page');
   });
 

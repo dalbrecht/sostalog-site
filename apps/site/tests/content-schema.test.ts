@@ -16,8 +16,6 @@ describe('sagegrouse.config — changelog content type', () => {
     const schema = sagegrouseConfig.contentTypes.changelog.schema;
     expect(schema.safeParse({ title: 't', date: new Date(), summary: 's' }).success).toBe(true);
     expect(schema.safeParse({ title: 't', date: new Date() }).success).toBe(false);
-    expect(
-      schema.safeParse({ title: 't', date: new Date(), summary: 's', version: 'v1.0.0' }).success,
-    ).toBe(true);
+    expect(schema.safeParse({ title: 't', date: new Date(), summary: 's', version: 'v1.0.0' }).success).toBe(true);
   });
 });
