@@ -76,3 +76,34 @@ test.describe('Landing page', () => {
     );
   });
 });
+
+test.describe('Changelog', () => {
+  test('page renders H1 and lede', async ({ page }) => {
+    await page.goto('/changelog');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Changelog');
+    await expect(page.getByText(/Newest first/)).toBeVisible();
+  });
+
+  test('renders at least one entry with title, date, summary', async ({ page }) => {
+    await page.goto('/changelog');
+    const articles = page.locator('main article');
+    await expect(articles.first()).toBeVisible();
+    await expect(articles.first().locator('h2')).toBeVisible();
+    await expect(articles.first().locator('time')).toBeVisible();
+    await expect(articles.first().locator('.summary')).toBeVisible();
+  });
+
+  test('header Changelog link has aria-current="page" on /changelog', async ({ page }) => {
+    await page.goto('/changelog');
+    const link = page
+      .getByRole('navigation', { name: 'Main' })
+      .getByRole('link', { name: 'Changelog' });
+    await expect(link).toHaveAttribute('aria-current', 'page');
+  });
+
+  test('seed entry has stable anchor at #initial-public-launch', async ({ page }) => {
+    await page.goto('/changelog#initial-public-launch');
+    const article = page.locator('article#initial-public-launch');
+    await expect(article).toBeVisible();
+  });
+});

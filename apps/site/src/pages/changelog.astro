@@ -1,0 +1,165 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface ChangelogData {
+  title: string;
+  date: Date;
+  version?: string;
+  summary: string;
+}
+
+const rawEntries = await getCollection('changelog');
+const entries = (rawEntries as Array<(typeof rawEntries)[number] & { data: ChangelogData }>).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
+function versionSlug(version: string): string {
+  return version
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function formatDate(d: Date): string {
+  return d.toISOString().slice(0, 10);
+}
+---
+
+<Base title="Changelog — sostalog" description="What's new in sosta. Newest first.">
+  <Header currentPath="/changelog" />
+  <main class="changelog">
+    <header class="changelog-header">
+      <h1>Changelog</h1>
+      <p class="lede">What's new in sosta. Newest first.</p>
+    </header>
+    {
+      entries.map(async (entry) => {
+        const { Content } = await render(entry);
+        const vSlug = entry.data.version ? versionSlug(entry.data.version) : undefined;
+        return (
+          <article id={entry.id}>
+            {vSlug && <a id={vSlug} class="version-anchor" aria-hidden="true" />}
+            <h2>{entry.data.title}</h2>
+            <p class="meta">
+              <time datetime={formatDate(entry.data.date)}>{formatDate(entry.data.date)}</time>
+              {entry.data.version && (
+                <>
+                  <span class="sep" aria-hidden="true">·</span>
+                  <span class="version">{entry.data.version}</span>
+                </>
+              )}
+            </p>
+            <p class="summary">{entry.data.summary}</p>
+            <div class="body">
+              <Content />
+            </div>
+          </article>
+        );
+      })
+    }
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  .changelog {
+    max-width: 42rem;
+    margin: 0 auto;
+    padding: 6rem 1.5rem 4rem;
+  }
+
+  .changelog-header {
+    margin-bottom: var(--space-7);
+  }
+
+  .changelog-header h1 {
+    font-family: var(--font-serif);
+    font-size: 2.5rem;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.5rem;
+    color: var(--fg);
+  }
+
+  .lede {
+    margin: 0;
+    color: var(--fg-muted);
+    font-size: 1rem;
+  }
+
+  article {
+    margin-bottom: var(--space-7);
+    position: relative;
+  }
+
+  .version-anchor {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  article h2 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+    color: var(--fg);
+  }
+
+  .meta {
+    margin: 0 0 1rem;
+    color: var(--fg-faint);
+    font-size: 0.875rem;
+  }
+
+  .meta .version {
+    color: var(--accent);
+  }
+
+  .meta .sep {
+    margin: 0 0.375rem;
+    color: var(--border-strong);
+  }
+
+  .summary {
+    margin: 0 0 1rem;
+    font-size: 1.0625rem;
+    font-weight: 500;
+    color: var(--fg);
+    line-height: 1.55;
+  }
+
+  .body {
+    color: var(--fg);
+    line-height: 1.6;
+  }
+
+  .body :global(ul) {
+    padding-left: 1.25rem;
+  }
+
+  .body :global(li) {
+    margin: 0.25rem 0;
+  }
+
+  .body :global(code) {
+    font-family: var(--font-sans);
+    color: var(--accent);
+  }
+
+  @media (max-width: 640px) {
+    .changelog {
+      padding: 3rem 1.5rem;
+    }
+    .changelog-header {
+      margin-bottom: var(--space-6);
+    }
+    article {
+      margin-bottom: var(--space-6);
+    }
+  }
+</style>
