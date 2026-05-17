@@ -1,0 +1,56 @@
+---
+interface Props {
+  href: string;
+  label: string;
+  ariaLabel?: string;
+}
+
+const { href, label, ariaLabel } = Astro.props;
+const external = /^https?:\/\//.test(href);
+---
+
+<a
+  class="cta"
+  href={href}
+  aria-label={ariaLabel ?? label}
+  rel={external ? 'noopener' : undefined}
+>
+  <span class="cta-label">{label}</span>
+  <span class="cta-arrow" aria-hidden="true">→</span>
+</a>
+
+<style>
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.5rem;
+    background: var(--accent);
+    color: var(--accent-contrast);
+    border-radius: var(--radius);
+    font-weight: 500;
+    font-size: 1rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .cta:hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  .cta-arrow {
+    transition: transform 120ms ease-out;
+  }
+
+  .cta:hover .cta-arrow {
+    transform: translateX(2px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cta-arrow {
+      transition: none;
+    }
+    .cta:hover .cta-arrow {
+      transform: none;
+    }
+  }
+</style>

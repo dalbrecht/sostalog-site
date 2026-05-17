@@ -1,14 +1,11 @@
 ---
-import '../styles/global.css';
+import Base from '../layouts/Base.astro';
+import Cta from '../components/Cta.astro';
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>sostalog</title>
-  </head>
-  <body class="bg-bg text-fg">
+<Base>
+  <main class="p-6">
     <h1 class="text-3xl font-bold">sostalog (scaffolding)</h1>
-  </body>
-</html>
+    <Cta href="https://app.sostalog.com" label="Open sosta" />
+  </main>
+</Base>
