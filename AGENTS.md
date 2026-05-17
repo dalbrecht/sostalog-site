@@ -16,7 +16,9 @@ The page ships under 100 KB combined HTML+CSS. CI fails the build if this is exc
 
 ## Zero-JS invariant
 
-The site ships no runtime JavaScript. No `client:*` directives, no `<script>` tags in pages, no third-party widgets. CI fails the build if a `*.js` bundle is produced or an inline `<script>` is detected. If a change genuinely needs JS, raise it in a design discussion before implementing.
+The build ships no application JavaScript. No `client:*` directives, no `<script>` tags in pages, no third-party widgets in source. CI fails the build if a `*.js` bundle is produced or an inline `<script>` is detected in `dist/`. If a change genuinely needs JS, raise it in a design discussion before implementing.
+
+Cloudflare may inject the Web Analytics beacon (`static.cloudflareinsights.com/beacon.min.js`) at the edge for sites with analytics enabled. The smoke test (`apps/site/tests/smoke.spec.ts`) allow-lists that one host and fails on anything else. If a new edge-injected script appears (e.g. a future Cloudflare feature), update the allow-list deliberately rather than broadening the check.
 
 ## Sagegrouse
 
