@@ -1,0 +1,100 @@
+name: ci
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  typecheck:
+    name: typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run typecheck
+
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run format:check
+      - run: pnpm run lint
+
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm run test
+      - run: pnpm run test:e2e
+
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    needs: [typecheck, lint, test]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
+      - name: Verify page weight under 100 KB (HTML + critical CSS)
+        run: |
+          html_size=$(stat -c%s apps/site/dist/index.html)
+          css_size=$(du -cb apps/site/dist/_astro/*.css 2>/dev/null | tail -1 | cut -f1 || echo 0)
+          total=$((html_size + css_size))
+          echo "index.html: ${html_size} bytes"
+          echo "css total:  ${css_size} bytes"
+          echo "combined:   ${total} bytes"
+          if [ "$total" -gt 102400 ]; then
+            echo "FAIL: HTML+CSS exceeds 100 KB"
+            exit 1
+          fi
+      - name: Verify zero runtime JS shipped
+        run: |
+          if ls apps/site/dist/_astro/*.js >/dev/null 2>&1; then
+            echo "FAIL: runtime JS bundles detected in dist/"
+            ls -la apps/site/dist/_astro/*.js
+            exit 1
+          fi
+          if grep -RIE '<script[^>]*>' apps/site/dist/*.html | grep -v 'type="application/ld\+json"'; then
+            echo "FAIL: inline <script> tags detected"
+            exit 1
+          fi
+          echo "OK: no JS shipped"
