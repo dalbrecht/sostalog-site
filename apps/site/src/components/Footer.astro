@@ -3,13 +3,16 @@ const year = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
-  <p>
-    <span class="brand">sostalog</span>
-    <span class="sep">·</span>
+  <nav class="footer-sitemap" aria-label="Footer">
+    <a href="/">sostalog</a>
+    <span class="sep" aria-hidden="true">·</span>
+    <a href="/changelog">Changelog</a>
+  </nav>
+  <p class="footer-meta">
     <a href="https://github.com/dalbrecht/sosta/blob/main/LICENSE" rel="noopener">MIT</a>
-    <span class="sep">·</span>
+    <span class="sep" aria-hidden="true">·</span>
     <a href="https://github.com/dalbrecht/sosta" rel="noopener">github.com/dalbrecht/sosta</a>
-    <span class="sep">·</span>
+    <span class="sep" aria-hidden="true">·</span>
     <span>{year}</span>
   </p>
 </footer>
@@ -21,24 +24,28 @@ const year = new Date().getFullYear();
     text-align: center;
   }
 
-  .site-footer p {
+  .footer-sitemap,
+  .footer-meta {
     margin: 0;
     color: var(--fg-faint);
     font-size: 0.875rem;
   }
 
-  .site-footer .brand {
-    font-family: var(--font-serif);
-    font-weight: 600;
+  .footer-sitemap {
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-sitemap a {
     color: var(--fg-muted);
   }
 
-  .site-footer .sep {
-    margin: 0 0.5rem;
-    color: var(--border-strong);
+  .footer-sitemap a:hover,
+  .footer-meta a:hover {
+    color: var(--fg);
   }
 
-  .site-footer a:hover {
-    color: var(--fg);
+  .sep {
+    margin: 0 0.5rem;
+    color: var(--border-strong);
   }
 </style>

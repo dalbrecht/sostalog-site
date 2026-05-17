@@ -64,4 +64,15 @@ test.describe('Landing page', () => {
     await expect(link).toBeVisible();
     await expect(link).toHaveAttribute('href', '/changelog');
   });
+
+  test('footer sitemap row contains brand and Changelog link', async ({ page }) => {
+    await page.goto('/');
+    const sitemap = page.getByRole('navigation', { name: 'Footer' });
+    await expect(sitemap).toBeVisible();
+    await expect(sitemap.getByRole('link', { name: 'sostalog' })).toHaveAttribute('href', '/');
+    await expect(sitemap.getByRole('link', { name: 'Changelog' })).toHaveAttribute(
+      'href',
+      '/changelog',
+    );
+  });
 });
