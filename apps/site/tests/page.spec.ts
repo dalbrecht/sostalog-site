@@ -17,9 +17,7 @@ test.describe('Landing page', () => {
 
   test('hero renders headline and sub-copy', async ({ page }) => {
     await page.goto('/');
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'Capture the day in the spaces between.',
-    );
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Capture the day in the spaces between.');
     await expect(page.getByText(/A timestamped note here\./)).toBeVisible();
   });
 

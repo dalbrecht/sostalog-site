@@ -9,12 +9,7 @@ const { href, label, ariaLabel } = Astro.props;
 const external = /^https?:\/\//.test(href);
 ---
 
-<a
-  class="cta"
-  href={href}
-  aria-label={ariaLabel ?? label}
-  rel={external ? 'noopener' : undefined}
->
+<a class="cta" href={href} aria-label={ariaLabel ?? label} rel={external ? 'noopener' : undefined}>
   <span class="cta-label">{label}</span>
   <span class="cta-arrow" aria-hidden="true">→</span>
 </a>
