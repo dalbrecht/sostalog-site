@@ -74,18 +74,22 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm run build
-      - name: Verify page weight under 100 KB (HTML + critical CSS)
+      - name: Verify page weight under 100 KB per page (HTML + critical CSS)
         run: |
-          html_size=$(stat -c%s apps/site/dist/index.html)
           css_size=$(du -cb apps/site/dist/_astro/*.css 2>/dev/null | tail -1 | cut -f1 || echo 0)
-          total=$((html_size + css_size))
-          echo "index.html: ${html_size} bytes"
-          echo "css total:  ${css_size} bytes"
-          echo "combined:   ${total} bytes"
-          if [ "$total" -gt 102400 ]; then
-            echo "FAIL: HTML+CSS exceeds 100 KB"
-            exit 1
-          fi
+          echo "css total: ${css_size} bytes"
+          fail=0
+          while IFS= read -r html; do
+            html_size=$(stat -c%s "$html")
+            total=$((html_size + css_size))
+            rel=${html#apps/site/dist/}
+            echo "$rel: ${html_size}B HTML + ${css_size}B CSS = ${total}B"
+            if [ "$total" -gt 102400 ]; then
+              echo "FAIL: $rel exceeds 100 KB"
+              fail=1
+            fi
+          done < <(find apps/site/dist -name '*.html')
+          exit $fail
       - name: Verify zero runtime JS shipped
         run: |
           if ls apps/site/dist/_astro/*.js >/dev/null 2>&1; then
