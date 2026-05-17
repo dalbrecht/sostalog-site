@@ -56,4 +56,12 @@ test.describe('Landing page', () => {
     await expect(footer).toContainText('MIT');
     await expect(footer).toContainText('2026');
   });
+
+  test('header nav contains a Changelog link', async ({ page }) => {
+    await page.goto('/');
+    const nav = page.getByRole('navigation', { name: 'Main' });
+    const link = nav.getByRole('link', { name: 'Changelog' });
+    await expect(link).toBeVisible();
+    await expect(link).toHaveAttribute('href', '/changelog');
+  });
 });
