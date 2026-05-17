@@ -12,12 +12,12 @@ One-time configuration to wire `dalbrecht/sostalog-site` to a new Cloudflare Wor
 1. Open `dash.cloudflare.com` → Workers & Pages → Create.
 2. Choose **Import a repository**. Connect to GitHub if not already.
 3. Select `dalbrecht/sostalog-site`.
-4. Configure:
+4. Configure (Cloudflare's unified Workers Builds UI as of mid-2026 has three build fields plus the project metadata):
    - **Project name:** `sostalog-site`
    - **Production branch:** `main`
-   - **Build command:** `pnpm install --frozen-lockfile && pnpm --filter @sostalog/site build`
-   - **Build output directory:** `apps/site/dist`
-   - **Root directory:** (leave blank — repo root)
+   - **Path:** `apps/site` — the monorepo subdirectory where `wrangler.toml` lives. Leaving this blank causes Wrangler to fail with "The Wrangler application detection logic has been run in the root of a workspace instead of targeting a specific project." The build and deploy commands both execute from this directory.
+   - **Build command:** `pnpm install --frozen-lockfile && pnpm build` — pnpm walks up from `apps/site/` to find the workspace's `pnpm-workspace.yaml` and `pnpm-lock.yaml`, so the install correctly resolves the monorepo. `pnpm build` runs the local `build` script (`astro build`), which writes to `apps/site/dist/`.
+   - **Deploy command:** `npx wrangler deploy` (default — leave as-is). Wrangler reads `apps/site/wrangler.toml`, which declares `[assets] directory = "./dist"`, and uploads the built site.
    - **Environment variables:** none.
 
 5. Click **Save and Deploy.** First build takes ~2-3 minutes.
