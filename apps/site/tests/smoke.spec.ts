@@ -20,6 +20,10 @@ test.describe('Production smoke tests', () => {
   });
 
   test('www redirects to apex', async ({ request }) => {
+    // maxRedirects: 0 disables automatic redirect-following so we can assert
+    // on the 301 response itself. Per Playwright types/types.d.ts, this
+    // option lives on the per-call methods (.get/.fetch/.post/etc.),
+    // not on APIRequestContext.newContext.
     const res = await request.get('https://www.sostalog.com/', { maxRedirects: 0 });
     expect(res.status()).toBe(301);
     expect(res.headers()['location']).toBe('https://sostalog.com/');
