@@ -45,12 +45,17 @@ test.describe('Production smoke tests', () => {
     // auto-injects the Web Analytics beacon at the edge for sites with
     // analytics enabled. The beacon is ~1KB, async, cookie-free, and out of
     // our build's hands — allow it but fail on any other script.
-    const ALLOWED_SCRIPT_HOST = 'static.cloudflareinsights.com';
+    //
+    // Match the full URL prefix (not just hostname) so a different script
+    // served from the same host would still fail. The beacon URL looks like
+    // https://static.cloudflareinsights.com/beacon.min.js/<hash>.
+    const ALLOWED_SCRIPT_URL_PREFIX = 'https://static.cloudflareinsights.com/beacon.min.js/';
     const unexpectedScripts: string[] = [];
     page.on('request', (req) => {
       if (req.resourceType() !== 'script') return;
-      const host = new URL(req.url()).host;
-      if (host !== ALLOWED_SCRIPT_HOST) unexpectedScripts.push(req.url());
+      if (!req.url().startsWith(ALLOWED_SCRIPT_URL_PREFIX)) {
+        unexpectedScripts.push(req.url());
+      }
     });
     await page.goto(PROD_URL, { waitUntil: 'networkidle' });
     expect(unexpectedScripts).toEqual([]);
