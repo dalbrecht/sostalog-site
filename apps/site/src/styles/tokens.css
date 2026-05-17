@@ -1,0 +1,85 @@
+/* apps/site/src/styles/tokens.css
+ *
+ * MIRRORED from sosta's Daylight palette.
+ * Source: github.com/dalbrecht/sosta:src/apps/shared/styles/tokens.css
+ * Mirrored at SHA: 9e8ab53aa8b4f5cca025f7b05fd9804f96f02879
+ * Mirror date: 2026-05-16
+ *
+ * Mirror policy: surface, foreground, border, the rose accent only
+ * (no ochre/moss/blue secondaries — those map to app-specific affordances),
+ * status (success/danger/warn), shadows, radius, and spacing are kept in
+ * sync manually. App-component variables (--hashtag-*, --frozen-fg) are
+ * NOT mirrored.
+ *
+ * When updating: re-mirror the listed variables only, update the SHA
+ * above, and note the change in CHANGELOG.md.
+ */
+
+:root {
+  color-scheme: light dark;
+
+  /* Surfaces */
+  --bg: oklch(98.5% 0.003 30);
+  --bg-elevated: oklch(96.5% 0.004 30);
+  --bg-sunken: oklch(94.5% 0.005 30);
+
+  /* Foreground */
+  --fg: oklch(22% 0.012 30);
+  --fg-muted: oklch(45% 0.012 30);
+  --fg-faint: oklch(54% 0.012 30);
+
+  /* Lines */
+  --border: oklch(90% 0.008 30);
+  --border-strong: oklch(78% 0.012 30);
+
+  /* Accent (rose only) */
+  --accent: oklch(55% 0.13 25);
+  --accent-soft: oklch(93% 0.04 25);
+  --accent-contrast: oklch(99% 0.003 30);
+
+  /* Status */
+  --success: oklch(58% 0.12 145);
+  --danger: oklch(50% 0.17 25);
+  --warn: oklch(60% 0.14 60);
+
+  /* Geometry */
+  --radius: 8px;
+  --radius-sm: 5px;
+  --shadow-sm: 0 1px 2px rgba(20, 16, 12, 0.05);
+  --shadow-md: 0 8px 24px -8px rgba(20, 16, 12, 0.12), 0 2px 6px rgba(20, 16, 12, 0.05);
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Surfaces */
+    --bg: oklch(18% 0.008 30);
+    --bg-elevated: oklch(22% 0.01 30);
+    --bg-sunken: oklch(15% 0.008 30);
+
+    /* Foreground */
+    --fg: oklch(94% 0.005 30);
+    --fg-muted: oklch(72% 0.008 30);
+    --fg-faint: oklch(65% 0.008 30);
+
+    /* Lines */
+    --border: oklch(28% 0.012 30);
+    --border-strong: oklch(40% 0.014 30);
+
+    /* Accent (rose only) */
+    --accent: oklch(75% 0.13 25);
+    --accent-soft: oklch(28% 0.05 25);
+    --accent-contrast: oklch(15% 0.008 30);
+
+    /* Status */
+    --success: oklch(70% 0.12 145);
+  }
+}
