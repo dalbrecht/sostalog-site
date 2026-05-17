@@ -45,4 +45,17 @@ test.describe('Landing page', () => {
     await expect(pillars.getByRole('heading', { level: 2 })).toHaveText('Yours. Quiet. Free.');
     await expect(pillars.locator('li')).toHaveCount(4);
   });
+
+  test('page has exactly two "Open sosta" CTAs', async ({ page }) => {
+    await page.goto('/');
+    const ctas = page.getByRole('link', { name: /^open sosta/i });
+    await expect(ctas).toHaveCount(2);
+  });
+
+  test('footer renders license and year', async ({ page }) => {
+    await page.goto('/');
+    const footer = page.getByRole('contentinfo');
+    await expect(footer).toContainText('MIT');
+    await expect(footer).toContainText('2026');
+  });
 });

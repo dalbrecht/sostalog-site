@@ -1,0 +1,44 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <p>
+    <span class="brand">sostalog</span>
+    <span class="sep">·</span>
+    <a href="https://github.com/dalbrecht/sosta/blob/main/LICENSE" rel="noopener">MIT</a>
+    <span class="sep">·</span>
+    <a href="https://github.com/dalbrecht/sosta" rel="noopener">github.com/dalbrecht/sosta</a>
+    <span class="sep">·</span>
+    <span>{year}</span>
+  </p>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 1.5rem;
+    text-align: center;
+  }
+
+  .site-footer p {
+    margin: 0;
+    color: var(--fg-faint);
+    font-size: 0.875rem;
+  }
+
+  .site-footer .brand {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    color: var(--fg-muted);
+  }
+
+  .site-footer .sep {
+    margin: 0 0.5rem;
+    color: var(--border-strong);
+  }
+
+  .site-footer a:hover {
+    color: var(--fg);
+  }
+</style>
