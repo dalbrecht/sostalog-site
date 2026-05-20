@@ -1,0 +1,8 @@
+# Generated lockfiles — committed verbatim as the package manager writes them.
+# Formatting them fights pnpm's own output and produces enormous, noisy diffs.
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Build output
+**/dist/
