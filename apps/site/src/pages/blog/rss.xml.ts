@@ -9,13 +9,15 @@ interface BlogData {
   title: string;
   date: Date;
   summary: string;
+  draft?: boolean;
 }
 
 export async function GET(context: APIContext) {
+  const includeDrafts = import.meta.env.DEV;
   const rawPosts = await getCollection('blog');
-  const posts = (rawPosts as Array<(typeof rawPosts)[number] & { data: BlogData }>).sort(
-    (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
-  );
+  const posts = (rawPosts as Array<(typeof rawPosts)[number] & { data: BlogData }>)
+    .filter((post) => includeDrafts || !post.data.draft)
+    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
   return rss({
     title: 'sostalog blog',

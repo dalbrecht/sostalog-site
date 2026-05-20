@@ -12,11 +12,17 @@ interface BlogData {
   title: string;
   date: Date;
   summary: string;
+  draft?: boolean;
 }
 
 export async function getStaticPaths() {
+  // Drafts get a previewable page in `make dev` but no page in the
+  // production build. Mirrors the listing filter in index.astro.
+  const includeDrafts = import.meta.env.DEV;
   const posts = await getCollection('blog');
-  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+  return posts
+    .filter((post) => includeDrafts || !(post.data as BlogData).draft)
+    .map((post) => ({ params: { slug: post.id }, props: { post } }));
 }
 
 type Props = { post: Awaited<ReturnType<typeof getCollection<'blog'>>>[number] };

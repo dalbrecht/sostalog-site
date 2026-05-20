@@ -31,10 +31,12 @@ describe('sagegrouse.config — blog content type', () => {
     expect(ct.stages).toEqual([]);
   });
 
-  it('schema requires title, date, summary', () => {
+  it('schema requires title, date, summary; draft is optional boolean', () => {
     const schema = sagegrouseConfig.contentTypes.blog.schema;
     expect(schema.safeParse({ title: 't', date: new Date(), summary: 's' }).success).toBe(true);
     expect(schema.safeParse({ title: 't', date: new Date() }).success).toBe(false);
     expect(schema.safeParse({ title: 't', summary: 's' }).success).toBe(false);
+    expect(schema.safeParse({ title: 't', date: new Date(), summary: 's', draft: true }).success).toBe(true);
+    expect(schema.safeParse({ title: 't', date: new Date(), summary: 's', draft: 'yes' }).success).toBe(false);
   });
 });
