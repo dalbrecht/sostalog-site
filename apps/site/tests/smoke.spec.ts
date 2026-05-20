@@ -70,4 +70,20 @@ test.describe('Production smoke tests', () => {
     expect(headers['x-content-type-options']).toBe('nosniff');
     expect(headers['x-frame-options']).toBe('DENY');
   });
+
+  test('/blog returns 200 with required security headers', async ({ request }) => {
+    const res = await request.get(`${PROD_URL}/blog`);
+    expect(res.status()).toBe(200);
+    const headers = res.headers();
+    expect(headers['strict-transport-security']).toMatch(/max-age=31536000/);
+    expect(headers['content-security-policy']).toMatch(/default-src 'self'/);
+    expect(headers['x-content-type-options']).toBe('nosniff');
+    expect(headers['x-frame-options']).toBe('DENY');
+  });
+
+  test('/blog/rss.xml is served as XML', async ({ request }) => {
+    const res = await request.get(`${PROD_URL}/blog/rss.xml`);
+    expect(res.status()).toBe(200);
+    expect(res.headers()['content-type']).toMatch(/xml/);
+  });
 });

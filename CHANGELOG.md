@@ -7,6 +7,7 @@ All notable changes to this project are documented here. Format follows [Keep a 
 ### Added
 
 - `/changelog` page surfacing hand-curated sosta product updates. Header gains a `Changelog` nav link (`aria-current="page"` on the active route); Footer gains a sitemap row above the license line. Sagegrouse pipeline activated for the first time with the `changelog` content type (zero-stage `location:` config). Per-page weight guard in CI extended to every `dist/**/*.html`.
+- Blog section: `/blog` index plus per-post pages at `/blog/<slug>/`, backed by a new `blog` sagegrouse content type (title / date / summary). Posts render with `og:type=article` and `article:published_time` meta; an RSS 2.0 feed is generated at `/blog/rss.xml` (build-time only, no client JS). Header and Footer gain `Blog` links. Seeded with the post "What is interstitial journaling?".
 
 ## [1.0.0] — 2026-05-17
 

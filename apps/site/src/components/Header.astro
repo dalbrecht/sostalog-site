@@ -6,9 +6,9 @@ interface Props {
 const { currentPath = Astro.url.pathname } = Astro.props;
 
 const navLinks = [
+  { href: '/blog', label: 'Blog' },
   { href: '/changelog', label: 'Changelog' },
   // future: { href: '/docs', label: 'Docs' },
-  // future: { href: '/blog', label: 'Blog' },
 ] as const;
 
 const isCurrent = (href: string) => currentPath === href || currentPath === `${href}/`;
