@@ -13,6 +13,15 @@ export default defineConfig({
       stages: [],
       location: 'src/content/changelog',
     },
+    blog: {
+      schema: z.object({
+        title: z.string(),
+        date: z.date(),
+        summary: z.string(),
+      }),
+      stages: [],
+      location: 'src/content/blog',
+    },
   },
   adapters: [],
 });

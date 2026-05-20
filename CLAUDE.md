@@ -42,7 +42,7 @@ The implementation plan lives in the sosta repo: `docs/superpowers/plans/2026-05
 - Astro 6 static-site generator.
 - Tailwind 4 via `@tailwindcss/vite`, with `@theme` mapping CSS variables to utilities.
 - Daylight tokens mirrored from sosta (see ADR 0001).
-- Sagegrouse-initialized pnpm workspace with one app (`apps/site`). The pipeline is dormant; no content types declared. Adding a blog or changelog later is a future spec.
+- Sagegrouse-initialized pnpm workspace with one app (`apps/site`). Two zero-stage content types are declared in `apps/site/sagegrouse.config.ts`: `changelog` (rendered inline on `/changelog`) and `blog` (a `/blog` index plus per-post pages at `/blog/<slug>/`, with an RSS feed at `/blog/rss.xml`).
 - Cloudflare Workers Builds watches `main` and deploys to the `sostalog-site` Worker.
 
 ## Invariants
@@ -54,4 +54,4 @@ The implementation plan lives in the sosta repo: `docs/superpowers/plans/2026-05
 
 ## Out of scope
 
-Until a follow-up spec is written: blog, changelog, docs, analytics, email capture, internationalization, multi-page navigation.
+Until a follow-up spec is written: docs, analytics, email capture, internationalization.
