@@ -63,12 +63,21 @@ test.describe('Landing page', () => {
     await expect(link).toHaveAttribute('href', '/changelog');
   });
 
-  test('footer sitemap row contains brand and Changelog link', async ({ page }) => {
+  test('footer sitemap row contains brand, Blog, and Changelog links', async ({ page }) => {
     await page.goto('/');
     const sitemap = page.getByRole('navigation', { name: 'Footer' });
     await expect(sitemap).toBeVisible();
     await expect(sitemap.getByRole('link', { name: 'SostaLog' })).toHaveAttribute('href', '/');
+    await expect(sitemap.getByRole('link', { name: 'Blog' })).toHaveAttribute('href', '/blog');
     await expect(sitemap.getByRole('link', { name: 'Changelog' })).toHaveAttribute('href', '/changelog');
+  });
+
+  test('header nav contains a Blog link', async ({ page }) => {
+    await page.goto('/');
+    const nav = page.getByRole('navigation', { name: 'Main' });
+    const link = nav.getByRole('link', { name: 'Blog' });
+    await expect(link).toBeVisible();
+    await expect(link).toHaveAttribute('href', '/blog');
   });
 });
 
@@ -98,5 +107,45 @@ test.describe('Changelog', () => {
     await page.goto('/changelog#initial-public-launch');
     const article = page.locator('article#initial-public-launch');
     await expect(article).toBeVisible();
+  });
+});
+
+test.describe('Blog', () => {
+  test('index renders H1, lede, and at least one post link', async ({ page }) => {
+    await page.goto('/blog');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Blog');
+    await expect(page.getByText(/Newest first/)).toBeVisible();
+    const firstPost = page.locator('.post-list a').first();
+    await expect(firstPost).toBeVisible();
+    await expect(firstPost.locator('h2')).toBeVisible();
+    await expect(firstPost.locator('time')).toBeVisible();
+  });
+
+  test('header Blog link has aria-current="page" on /blog', async ({ page }) => {
+    await page.goto('/blog');
+    const link = page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Blog' });
+    await expect(link).toHaveAttribute('aria-current', 'page');
+  });
+
+  test('seed post renders title, date, body, and back link', async ({ page }) => {
+    await page.goto('/blog/what-is-interstitial-journaling/');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('What is interstitial journaling?');
+    await expect(page.locator('article time')).toBeVisible();
+    await expect(page.locator('article .body')).toBeVisible();
+    await expect(page.getByRole('link', { name: /Blog/ }).first()).toHaveAttribute('href', '/blog');
+  });
+
+  test('seed post sets og:type=article', async ({ page }) => {
+    await page.goto('/blog/what-is-interstitial-journaling/');
+    const ogType = page.locator('meta[property="og:type"]');
+    await expect(ogType).toHaveAttribute('content', 'article');
+  });
+
+  test('RSS feed is served and lists the seed post', async ({ request }) => {
+    const res = await request.get('/blog/rss.xml');
+    expect(res.status()).toBe(200);
+    const body = await res.text();
+    expect(body).toContain('<rss');
+    expect(body).toContain('What is interstitial journaling?');
   });
 });
