@@ -14,12 +14,18 @@ interface BlogData {
   title: string;
   date: Date;
   summary: string;
+  draft?: boolean;
 }
 
+// Drafts render in `make dev` for previewing but are excluded from the
+// production build. import.meta.env.DEV is true under `astro dev`, false in
+// `astro build`.
+const includeDrafts = import.meta.env.DEV;
+
 const rawPosts = await getCollection('blog');
-const posts = (rawPosts as Array<(typeof rawPosts)[number] & { data: BlogData }>).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
-);
+const posts = (rawPosts as Array<(typeof rawPosts)[number] & { data: BlogData }>)
+  .filter((post) => includeDrafts || !post.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
 // Date formatting convention matches /changelog: render the UTC date portion.
 // All posts use a frontmatter date-only string (e.g., `date: 2026-05-20`)
@@ -45,6 +51,14 @@ function formatDate(d: Date): string {
               <h2>{post.data.title}</h2>
               <p class="meta">
                 <time datetime={formatDate(post.data.date)}>{formatDate(post.data.date)}</time>
+                {post.data.draft && (
+                  <>
+                    <span class="sep" aria-hidden="true">
+                      ·
+                    </span>
+                    <span class="draft-badge">Draft</span>
+                  </>
+                )}
               </p>
               <p class="summary">{post.data.summary}</p>
             </a>
@@ -115,6 +129,17 @@ function formatDate(d: Date): string {
     margin: 0 0 0.75rem;
     color: var(--fg-faint);
     font-size: 0.875rem;
+  }
+
+  .meta .sep {
+    margin: 0 0.375rem;
+    color: var(--border-strong);
+  }
+
+  /* Drafts only ever render in dev (excluded from production builds). */
+  .draft-badge {
+    color: var(--accent);
+    font-weight: 500;
   }
 
   .summary {
