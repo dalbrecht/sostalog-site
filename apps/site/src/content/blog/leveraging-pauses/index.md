@@ -28,4 +28,4 @@ The reach for the feed is filling the pause with someone else's day. Writing a l
 - Transitions vs. true breaks (coffee, walk) — different kinds of pause
 - The "what just happened / what's next" two-line format
 - Resisting the urge to make the pause _productive_ in a grindy way
-- How sosta's single input keeps the pause short
+- How SostaLog's single input keeps the pause short

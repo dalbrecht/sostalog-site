@@ -15,7 +15,7 @@ const isCurrent = (href: string) => currentPath === href || currentPath === `${h
 ---
 
 <header class="site-header">
-  <a class="wordmark" href="/" aria-label="sostalog home">sostalog</a>
+  <a class="wordmark" href="/" aria-label="SostaLog home">SostaLog</a>
   <nav class="site-nav" aria-label="Main">
     {
       navLinks.map((link, i) => (
@@ -36,9 +36,6 @@ const isCurrent = (href: string) => currentPath === href || currentPath === `${h
       ))
     }
   </nav>
-  <a class="github-link" href="https://github.com/dalbrecht/sosta" rel="noopener" aria-label="View sosta on GitHub">
-    GitHub <span aria-hidden="true">↗</span>
-  </a>
 </header>
 
 <style>
@@ -88,15 +85,6 @@ const isCurrent = (href: string) => currentPath === href || currentPath === `${h
     color: var(--border-strong);
   }
 
-  .github-link {
-    font-size: 0.875rem;
-    color: var(--fg-muted);
-  }
-
-  .github-link:hover {
-    color: var(--fg);
-  }
-
   @media (max-width: 640px) {
     .site-header {
       gap: var(--space-2);
@@ -105,9 +93,6 @@ const isCurrent = (href: string) => currentPath === href || currentPath === `${h
       width: 100%;
       order: 3;
       justify-content: flex-start;
-    }
-    .github-link {
-      margin-left: auto;
     }
   }
 </style>

@@ -2,7 +2,7 @@
 title: Initial public launch
 date: 2026-05-17
 version: v0.1.0
-summary: The first public version of sosta.
+summary: The first public version of SostaLog.
 ---
 
 - Write timestamped notes with `# titles` and `#hashtags`

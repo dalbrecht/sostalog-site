@@ -7,7 +7,7 @@ draft: true
 
 > Draft.
 
-A title is a small commitment. Before you've written the entry you have to decide what it's _about_ — and naming a thing you haven't written yet is its own little stall. So sosta makes the `# title` optional, which raises a fair question: when is a headline worth it, and when is it just friction in a hat?
+A title is a small commitment. Before you've written the entry you have to decide what it's _about_ — and naming a thing you haven't written yet is its own little stall. So SostaLog makes the `# title` optional, which raises a fair question: when is a headline worth it, and when is it just friction in a hat?
 
 ### When a headline earns its place
 

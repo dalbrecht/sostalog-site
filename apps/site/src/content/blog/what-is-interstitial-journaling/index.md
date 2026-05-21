@@ -1,7 +1,7 @@
 ---
 title: What is interstitial journaling?
 date: 2026-05-20
-summary: A timestamped line whenever you switch tasks. It's the lightest journaling habit we know — and it's the one sosta is built around.
+summary: A timestamped line whenever you switch tasks. It's the lightest journaling habit we know — and it's the one SostaLog is built around.
 ---
 
 Most journaling asks you to sit down at the end of the day and reconstruct it. By then the texture is gone: you remember that you were busy, not _what_ you were doing at 2:40 when the idea actually landed.
@@ -24,12 +24,12 @@ None of those lines is a "journal entry" in the grand sense. Together they're a 
 - **It's a natural transition ritual.** Writing the line is the act of closing one task and opening the next. The friction is the feature — it makes context-switches deliberate.
 - **The record compounds.** Search a hashtag weeks later and you have a thread of everything you touched, with the reasoning still attached.
 
-### How sosta is built for it
+### How SostaLog is built for it
 
-sosta is a journal designed around this one habit, so the path from thought to logged line is as short as it can be:
+SostaLog is a journal designed around this one habit, so the path from thought to logged line is as short as it can be:
 
 - Write timestamped notes with `# titles` and `#hashtags`, then search across everything later.
 - Your journal lives on your computer — local-first, no account, works offline.
 - Entries lock 24 hours after you write them, so the record stays a record. You captured the moment; you don't get to quietly rewrite it.
 
-You don't need a system or a streak. You just need somewhere quick to put the line. Open sosta, write what you just finished, and get back to work.
+You don't need a system or a streak. You just need somewhere quick to put the line. Open SostaLog, write what you just finished, and get back to work.

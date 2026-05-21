@@ -20,8 +20,8 @@ export async function GET(context: APIContext) {
     .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
   return rss({
-    title: 'sostalog blog',
-    description: 'Notes on journaling, attention, and building sosta.',
+    title: 'SostaLog blog',
+    description: 'Notes on journaling, attention, and building SostaLog.',
     site: context.site ?? 'https://sostalog.com',
     items: posts.map((post) => ({
       title: post.data.title,

@@ -31,7 +31,7 @@ test.describe('Production smoke tests', () => {
 
   test('CTA links to app.sostalog.com', async ({ page }) => {
     await page.goto(PROD_URL);
-    const cta = page.getByRole('link', { name: /open sosta/i }).first();
+    const cta = page.getByRole('link', { name: /open sostalog/i }).first();
     await expect(cta).toHaveAttribute('href', 'https://app.sostalog.com');
   });
 
