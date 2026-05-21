@@ -10,7 +10,7 @@ summary: You can now edit entries within the freeze window, jump to any day via 
 - **Edit entries within the freeze window.** Each entry shows a pencil icon while it's still editable; clicking opens the composer pre-seeded with the entry's body. You can also delete from there. Once the entry freezes (24 hours by default), the pencil disappears.
 - **Jump to any day.** Click an activity heatmap cell to scroll the timeline to that day. The URL updates to `#date/YYYY-MM-DD` so you can deep-link a specific day.
 - **Theme override.** `Settings → Theme` lets you pin **Light**, **Dark**, or follow your **System** preference. Your choice persists across reloads.
-- **Multi-tab safety.** If you open sosta in a second tab of the same browser, that tab now shows a banner explaining the journal is already open elsewhere and disables writes — your storage stays consistent.
+- **Multi-tab safety.** If you open SostaLog in a second tab of the same browser, that tab now shows a banner explaining the journal is already open elsewhere and disables writes — your storage stays consistent.
 
 ### Polish
 
