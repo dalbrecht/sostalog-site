@@ -8,11 +8,9 @@ test.describe('Landing page', () => {
     await expect(cta).toHaveAttribute('href', 'https://app.sostalog.com');
   });
 
-  test('header renders wordmark and GitHub link', async ({ page }) => {
+  test('header renders wordmark', async ({ page }) => {
     await page.goto('/');
     await expect(page.getByRole('banner').getByText('SostaLog')).toBeVisible();
-    const gh = page.getByRole('banner').getByRole('link', { name: /github/i });
-    await expect(gh).toHaveAttribute('href', 'https://github.com/dalbrecht/sosta');
   });
 
   test('hero renders headline and sub-copy', async ({ page }) => {
@@ -50,10 +48,10 @@ test.describe('Landing page', () => {
     await expect(ctas).toHaveCount(2);
   });
 
-  test('footer renders license and year', async ({ page }) => {
+  test('footer renders copyright and year', async ({ page }) => {
     await page.goto('/');
     const footer = page.getByRole('contentinfo');
-    await expect(footer).toContainText('MIT');
+    await expect(footer).toContainText('Don Albrecht');
     await expect(footer).toContainText('2026');
   });
 
