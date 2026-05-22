@@ -2,13 +2,14 @@
  *
  * MIRRORED from sosta's Daylight palette.
  * Source: github.com/dalbrecht/sosta:src/apps/shared/styles/tokens.css
- * Mirrored at SHA: 9e8ab53aa8b4f5cca025f7b05fd9804f96f02879
- * Mirror date: 2026-05-16
+ * Mirrored at SHA: 59cc2e2a55a059a8d13b43966e41d25564671296
+ * Mirror date: 2026-05-21
  *
- * Mirror policy: surface, foreground, border, the rose accent only
- * (no ochre/moss/blue secondaries — those map to app-specific affordances),
- * status (success/danger/warn), shadows, radius, and spacing are kept in
- * sync manually. App-component variables (--hashtag-*, --frozen-fg) are
+ * Mirror policy: surface, foreground, border, the primary accent only
+ * (rose in light, blue in dark — the ochre/moss secondaries map to
+ * app-specific affordances and are NOT mirrored), status
+ * (success/danger/warn), shadows, radius, and spacing are kept in sync
+ * manually. App-component variables (--hashtag-*, --frozen-fg) are
  * NOT mirrored.
  *
  * When updating: re-mirror the listed variables only, update the SHA
@@ -74,9 +75,11 @@
     --border: oklch(28% 0.012 30);
     --border-strong: oklch(40% 0.014 30);
 
-    /* Accent (rose only) */
-    --accent: oklch(75% 0.13 25);
-    --accent-soft: oklch(28% 0.05 25);
+    /* Accent — blue in dark mode, not rose. Rose accents read as "danger"
+     * on a dark surface; the primary action color should feel calm/positive.
+     * Hue 245 matches the app's dark theme. (Light mode stays rose.) */
+    --accent: oklch(75% 0.13 245);
+    --accent-soft: oklch(28% 0.05 245);
     --accent-contrast: oklch(15% 0.008 30);
 
     /* Status */
