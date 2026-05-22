@@ -86,4 +86,10 @@ test.describe('Production smoke tests', () => {
     expect(res.status()).toBe(200);
     expect(res.headers()['content-type']).toMatch(/xml/);
   });
+
+  test('/changelog/rss.xml is served as XML', async ({ request }) => {
+    const res = await request.get(`${PROD_URL}/changelog/rss.xml`);
+    expect(res.status()).toBe(200);
+    expect(res.headers()['content-type']).toMatch(/xml/);
+  });
 });

@@ -108,6 +108,21 @@ test.describe('Changelog', () => {
     const article = page.locator('article#initial-public-launch');
     await expect(article).toBeVisible();
   });
+
+  test('header shows a visible RSS link to the changelog feed', async ({ page }) => {
+    await page.goto('/changelog');
+    const rss = page.getByRole('link', { name: /changelog feed \(RSS\)/i });
+    await expect(rss).toBeVisible();
+    await expect(rss).toHaveAttribute('href', '/changelog/rss.xml');
+  });
+
+  test('RSS feed is served and lists an entry', async ({ request }) => {
+    const res = await request.get('/changelog/rss.xml');
+    expect(res.status()).toBe(200);
+    const body = await res.text();
+    expect(body).toContain('<rss');
+    expect(body).toContain('Initial public launch');
+  });
 });
 
 test.describe('Blog', () => {
@@ -147,5 +162,30 @@ test.describe('Blog', () => {
     const body = await res.text();
     expect(body).toContain('<rss');
     expect(body).toContain('What is interstitial journaling?');
+  });
+
+  test('header shows a visible RSS link to the blog feed', async ({ page }) => {
+    await page.goto('/blog');
+    const rss = page.getByRole('link', { name: /blog feed \(RSS\)/i });
+    await expect(rss).toBeVisible();
+    await expect(rss).toHaveAttribute('href', '/blog/rss.xml');
+  });
+});
+
+test.describe('Feed discovery', () => {
+  test('every page advertises both feeds via <head> autodiscovery', async ({ page }) => {
+    for (const path of ['/', '/blog', '/changelog']) {
+      await page.goto(path);
+      const feeds = page.locator('head link[rel="alternate"][type="application/rss+xml"]');
+      await expect(feeds).toHaveCount(2);
+      await expect(page.locator('head link[type="application/rss+xml"][title="SostaLog blog"]')).toHaveAttribute(
+        'href',
+        /\/blog\/rss\.xml$/,
+      );
+      await expect(page.locator('head link[type="application/rss+xml"][title="SostaLog changelog"]')).toHaveAttribute(
+        'href',
+        /\/changelog\/rss\.xml$/,
+      );
+    }
   });
 });
