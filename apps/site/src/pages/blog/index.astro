@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import RssLink from '../../components/RssLink.astro';
 
 // BlogData mirrors the zod schema in `apps/site/sagegrouse.config.ts`.
 // Sagegrouse-astro doesn't yet bridge the zod schema's TypeScript types
@@ -36,11 +37,13 @@ function formatDate(d: Date): string {
 ---
 
 <Base title="Blog — SostaLog" description="Notes on journaling, attention, and building SostaLog. Newest first.">
-  <link slot="head" rel="alternate" type="application/rss+xml" title="SostaLog blog" href="/blog/rss.xml" />
   <Header currentPath="/blog" />
   <main class="blog">
     <header class="blog-header">
-      <h1>Blog</h1>
+      <div class="title-row">
+        <h1>Blog</h1>
+        <RssLink href="/blog/rss.xml" label="SostaLog blog feed (RSS)" />
+      </div>
       <p class="lede">Notes on journaling, attention, and building SostaLog. Newest first.</p>
     </header>
     <ul class="post-list">
@@ -79,6 +82,13 @@ function formatDate(d: Date): string {
 
   .blog-header {
     margin-bottom: var(--space-7);
+  }
+
+  .title-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
   }
 
   .blog-header h1 {

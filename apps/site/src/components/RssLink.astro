@@ -1,0 +1,43 @@
+---
+// A small, visible "RSS" link with the canonical feed glyph. Pure markup +
+// CSS (no client JS). Pair the visible "RSS" text with a descriptive
+// aria-label so screen-reader users hear which feed it points to.
+interface Props {
+  href: string;
+  label: string;
+}
+const { href, label } = Astro.props;
+---
+
+<a class="rss-link" href={href} aria-label={label}>
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+    <circle cx="6.18" cy="17.82" r="2.18"></circle>
+    <path
+      d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83C19.56 11.4 12.6 4.44 4 4.44zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83C13.9 14.53 9.47 10.1 4 10.1z"
+    ></path>
+  </svg>
+  <span>RSS</span>
+</a>
+
+<style>
+  .rss-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    flex: none;
+    font-size: 0.875rem;
+    line-height: 1;
+    color: var(--fg-muted);
+    white-space: nowrap;
+  }
+
+  .rss-link:hover {
+    color: var(--accent);
+  }
+
+  .rss-link svg {
+    display: block;
+    width: 1rem;
+    height: 1rem;
+  }
+</style>
