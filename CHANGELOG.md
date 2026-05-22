@@ -4,6 +4,10 @@ All notable changes to this project are documented here. Format follows [Keep a 
 
 ## [Unreleased]
 
+### Changed
+
+- Re-mirrored the dark-mode accent from sosta: the dark accent is now blue (oklch hue 245) instead of rose, matching the app's updated dark theme — rose read as "danger" on dark surfaces. Light mode is unchanged. Synced to sosta SHA `59cc2e2`.
+
 ### Added
 
 - `/changelog` page surfacing hand-curated sosta product updates. Header gains a `Changelog` nav link (`aria-current="page"` on the active route); Footer gains a sitemap row above the license line. Sagegrouse pipeline activated for the first time with the `changelog` content type (zero-stage `location:` config). Per-page weight guard in CI extended to every `dist/**/*.html`.
